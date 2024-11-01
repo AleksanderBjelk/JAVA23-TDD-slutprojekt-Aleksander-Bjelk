@@ -17,14 +17,6 @@ public class Card {
         return cardId;
     }
 
-    public String getPinCode() {
-        return pinCode;
-    }
-
-    public boolean isLocked() {
-        return locked;
-    }
-
     public int getFailedAttempts() {
         return failedAttempts;
     }
@@ -33,9 +25,6 @@ public class Card {
         this.failedAttempts++;
     }
 
-    public void lockCard() {
-        this.locked = true;
-    }
 
     public void resetFailedAttempts() {
         this.failedAttempts = 0;
