@@ -79,9 +79,14 @@ public class ATM {
     }
 
     //gör ett uttag om saldot räcker. Annars kastas ett undantag
-    public void withdraw(double amount) throws InsufficientFundsException, CardLockedException {
+    public void withdraw(double amount) throws InsufficientFundsException, CardLockedException, IllegalArgumentException {
         if (!isCardInserted()) return;
         isCardFrozen();
+
+        if (amount < 20) {
+            throw new IllegalArgumentException("Minsta uttagsbelopp är 20 kronor.");
+        }
+
         double balance = bank.getBalance(currentCard.getCardId());
         if (balance >= amount) {
             bank.withdraw(currentCard.getCardId(), amount);

@@ -206,5 +206,13 @@ public class ATMTest {
         verify(mockGritBank, times(1)).lockCard("12345");
     }
 
+    @Test
+    @DisplayName("uttag misslyckas om beloppet är mindre än 20 kronor")
+    public void testWithdrawNotLessThanTwenty() throws CardLockedException {
+        atm.insertCard(testCard);
+        assertThrows(IllegalArgumentException.class, () -> atm.withdraw(19),
+                "uttaget borde misslyckas om beloppet är under 20 kronor");
+    }
+
 }
 
