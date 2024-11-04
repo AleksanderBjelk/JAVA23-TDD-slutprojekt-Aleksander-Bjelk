@@ -23,6 +23,15 @@ public class ATM {
         return true;
     }
 
+    //kontrollera om ett kort är spärrat
+    private boolean isCardFrozen() throws CardLockedException {
+        if (bank.isCardFrozen(currentCard.getCardId())) {
+            System.out.println("kortet är spärrat och kan inte användas");
+            throw new CardLockedException("kortet är spärrat.");
+        }
+        return false;
+    }
+
     //sätter in ett kort i ATM:en, kontrollerar om kortet är spärrat innan det sätts in
     public void insertCard(Card card) throws CardLockedException {
         if (bank.isCardFrozen(card.getCardId())) {
@@ -34,6 +43,7 @@ public class ATM {
     //kontrollerar pinkoden. Spärrar kortet efter tre felaktiga pinkodssförsök
     public boolean enterPin(String pin) throws CardLockedException {
         if (!isCardInserted()) return false;
+        isCardFrozen();
 
         if (bank.validatePin(currentCard.getCardId(), pin)) {
             currentCard.resetFailedAttempts();
@@ -55,20 +65,23 @@ public class ATM {
     }
 
     //hämtar och returnerar saldo, eller null om inget kort är insatt
-    public Double checkBalance() {
+    public Double checkBalance() throws CardLockedException {
         if (!isCardInserted()) return null;
+        isCardFrozen();
         return bank.getBalance(currentCard.getCardId());
     }
 
     //gör en insättning på kontot kopplat till det insatta kortet
-    public void deposit(double amount) {
+    public void deposit(double amount) throws CardLockedException {
         if (!isCardInserted()) return;
+        isCardFrozen();
         bank.deposit(currentCard.getCardId(), amount);
     }
 
     //gör ett uttag om saldot räcker. Annars kastas ett undantag
-    public void withdraw(double amount) throws InsufficientFundsException {
+    public void withdraw(double amount) throws InsufficientFundsException, CardLockedException {
         if (!isCardInserted()) return;
+        isCardFrozen();
         double balance = bank.getBalance(currentCard.getCardId());
         if (balance >= amount) {
             bank.withdraw(currentCard.getCardId(), amount);

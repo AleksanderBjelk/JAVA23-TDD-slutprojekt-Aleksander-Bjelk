@@ -108,7 +108,7 @@ public class ATMTest {
 
     @Test
     @DisplayName("saldo hämtas inte när inget kort är insatt")
-    public void testCheckBalanceNoCardInserted() {
+    public void testCheckBalanceNoCardInserted() throws CardLockedException {
         //testar att checkBalance returnerar null när inget kort är insatt.
         Double balance = atm.checkBalance();
         assertNull(balance, "borde returnera null när inget kort är insatt");
